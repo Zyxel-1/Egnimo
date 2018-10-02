@@ -32,7 +32,7 @@ Follow the README.md on the server and client folder for instructions for each.
 ## Authors
 * **Roberto Sanchez** - *Initial work* - [Zyxel-1](https://github.com/Zyxel-1)
 
-See also the list of [contributors](https://github.com/apham42/WhatFits/graphs/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/Zyxel-1/UmbraMessenging/graphs/contributors) who participated in this project.
 
 ## License
 
