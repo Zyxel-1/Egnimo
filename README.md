@@ -1,4 +1,4 @@
-# UmbraTalk
+# Umbra Messenging
 An end to end encryptic chat application between two individuals.
 
 ## Get Started
