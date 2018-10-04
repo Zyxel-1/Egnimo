@@ -13,8 +13,8 @@ Follow the README.md on the server and client folder for instructions for each.
 
 ## Release History
 
-* 0.1.0 - October 2018
-    * To be announced
+* 0.0.0 - October 2018
+    * Inception
 
 ## Built With
 
