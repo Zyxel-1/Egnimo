@@ -1,4 +1,4 @@
-# Umbra Messenging - Client
+# Grey Messenging - Client
 [To be added]
 
 ## Built With
