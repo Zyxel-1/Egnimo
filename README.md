@@ -1,4 +1,4 @@
-# Umbra Messaging
+# Grey Messaging
 An end to end encryptic chat application between two individuals.
 
 ## Get Started
