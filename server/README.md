@@ -1,5 +1,5 @@
 
-# Umbra Messenging - Server
+# Grey Messenging - Server
 An end to end encryptic chat application between two individuals.
 
 ## Built With
