@@ -4,11 +4,11 @@ An end to end encryptic chat application between two individuals.
 
 ## Built With
 
-* [Visual Studio Code](https://code.visualstudio.com/) - Used for frontend/backend development
+* [Visual Studio Code](https://code.visualstudio.com/) - Used for backend development
 
-## Frameworks
+## Technologies
 
-* [Django](https://https://www.djangoproject.com/) - Backend python web framework
+* [NodeJs](https://https://www.djangoproject.com/) - Backend python web framework
 * More to come
 
 ## Contributing
