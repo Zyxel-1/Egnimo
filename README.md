@@ -5,9 +5,6 @@ An end to end encryptic chat application between two individuals.
 
 Follow the README.md on the server and client folder for instructions for each.
 
-* client
-  * This is the directory that stores the front end of the application.
-
 * server
   * This is the directory that stores the backend (server and database) of the application.
 
@@ -19,11 +16,6 @@ Follow the README.md on the server and client folder for instructions for each.
 ## Built With
 
 * [Visual Studio Code](https://code.visualstudio.com/) - Used for frontend/backend development
-
-## Frameworks
-
-* [Django](https://https://www.djangoproject.com/) - Backend python web framework
-* More to come
 
 ## Contributing
 
