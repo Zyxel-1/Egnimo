@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-
+const bcrypt = require('bcryptjs')
+var SALT_FACTOR = 10;
 // Define schema
 var Schema = mongoose.Schema;
 
@@ -16,6 +17,14 @@ var UserSchema = new Schema({
         required: true,
         minlength: 6
     },
+    isOnline: {
+        type: Boolean,
+        required: false,
+    },
+    salt: {
+        type: String,
+        required: false
+    },
     tokens: [{
         access: {
             type: String,
@@ -30,7 +39,8 @@ var UserSchema = new Schema({
 
 var User = mongoose.model('User',UserSchema);
 
-// Finds credential in Database
+
+// Finds credentials in the database
 UserSchema.statics.findByCredentials = function (email, password) {
     var User = this;
     // Returns user that is found
@@ -52,4 +62,21 @@ UserSchema.statics.findByCredentials = function (email, password) {
         });
     });
 };
+
+// Hashes the password before being inserted into the database
+UserSchema.pre('save', function (next) {
+    console.log('Inside Hashing algo')
+    var user = this;
+
+    if (user.isModified('password')) {
+        bcrypt.genSalt(SALT_FACTOR, (err, salt) => {
+            bcrypt.hash(user.password, salt, (err, hash) => {
+                user.password = hash;
+                next();
+            });
+        });
+    } else {
+        next();
+    }
+});
 module.exports = {User};

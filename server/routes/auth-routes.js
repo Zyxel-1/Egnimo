@@ -1,13 +1,7 @@
 const router = require('express').Router();
 
-// Auth Login
+router.post('/api/profile', async (req,res)=>{
+    res.status(200).send('This is a protected route. You have access to it.')
+});
 
-router.get('/login',(req,res)=>{
-    res.send('hello');
-
-})
-
-// Auth with google
-router.get('/google',(req,res)=>{
-    res.send('logging in with google.')
-})
+module.exports = router;
