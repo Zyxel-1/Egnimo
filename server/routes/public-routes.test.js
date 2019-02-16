@@ -1,76 +1,92 @@
 const expect = require('expect');
 const request = require('supertest')
-const {
-    ObjectID
-} = require('mongodb');
+//const {ObjectID} = require('mongodb');
 
-const {
-    app
-} = require('../app.js');
-const {
-    User
-} = require('../models/user');
-
-describe('Sample Test', () => {
-    it('should pass with no problem', () => {
-
-    })
-})
+const {app} = require('../app.js');
+const {User} = require('../models/user');
 
 // Testing registration API
 describe('POST /api/register', () => {
-    it('should register user with valid username and password', (done) => {
-
-        // Creating userdata
-        var body = {
-            username: 'johndoe123',
-            password: 'StR0NgPaSsW0rD'
-        }
-        // Sending to API
-        request(app)
-            .post('/api/register')
-            .send(body)
-            .expect(200)
-            .end((err) => {
-                if (err) {
-                    return done(err);
-                }
-                // Testing if its stored in the database
-                var username = body.username;
-                User.findOne({username}).then((user) => {
-                    expect(user).not.toBeFalsy();
-                    expect(user.password).not.toBe(body.password)
-                    expect(user.salt).not.toBeFalsy();
-                    done();
-                }).catch((e) => done(e));
-            });
-    });
-});
-
-it('should create a user', (done) => {
-    var email = 'example@example.com';
-    var password = '123mnb!';
-
+  it('should register user with valid username and password', (done) => {
+    // Creating userdata
+    var body = {
+      username: 'johndoe123',
+      password: 'StR0NgPaSsW0rD'
+    };
+    // Sending to API
     request(app)
-      .post('/users')
-      .send({
-        email,
-        password
-      })
+      .post('/api/register')
+      .send(body)
       .expect(200)
-      .expect((res) => {
-        expect(res.headers['x-auth']).not.toBeFalsy();
-        expect(res.body._id).not.toBeFalsy();
-        expect(res.body.email).toBe(email);
-      })
       .end((err) => {
         if (err) {
           return done(err);
         }
-        User.findOne({email}).then((user) => {
+        // Testing if its stored in the database
+        var username = body.username;
+        User.findOne({
+          username
+        }).then((user) => {
           expect(user).not.toBeFalsy();
-          expect(user.password).not.toBe(password);
+          expect(user.password).not.toBe(body.password)
+          expect(user.salt).not.toBeFalsy();
           done();
-        }).catch((e)=>{done(e);})
+        }).catch((e) => done(e));
       });
+  }).timeout(500);
+
+  it('should NOT passwith with invalid username', (done) => {
+    var body = {
+      username: '',
+      password: 'otherPassword'
+    };
+    
+    request(app)
+      .post('/api/register')
+      .send(body)
+      .expect(400)
+      .end(done);
   });
+
+  it('should NOT pass with invalid password', (done) => {
+    
+    var body = {
+      username: 'johnTheSecond',
+      password: ''
+    };
+    
+    request(app)
+      .post('/api/register')
+      .send(body)
+      .expect(400)
+      .end(done);
+  });
+
+  it('should NOT store user if username already exists in DB', (done) => {
+    
+    var body = {
+      username: 'johndoe123',
+      password: 'otherPassword'
+    };
+
+    request(app)
+      .post('/api/register')
+      .send(body)
+      .expect(400)
+      .end(done);
+  });
+});
+
+describe('POST /api/login1',()=>{
+  it('should return salt if user is found',()=>{
+
+  });
+
+  it('should NOT return salt if user is not found',()=>{
+
+  });
+
+  it('should NOT return anything if request is invalid',()=>{
+
+  });
+});
