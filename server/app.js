@@ -17,6 +17,6 @@ app.use('/',require('./routes/public-routes'));
 // Calls all the private routes that require Authentication
 //app.use('/auth',require('./routes/auth-routes'));
 
-
+module.exports.app = app;
 
 

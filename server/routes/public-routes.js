@@ -25,8 +25,6 @@ router.post('/api/register', async (req, res) => {
         var credentials = hashing.hashPassword(body.password);
         // Store data into user model
         var user = new User({username:body.username,password:credentials.hash,salt:credentials.salt});
-        //var user = new User(body);
-        console.log(user)
         await user.save();
         // Send successful message
         res.status(200).send('Registration Successful');
