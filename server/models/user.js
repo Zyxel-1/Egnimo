@@ -62,21 +62,4 @@ UserSchema.statics.findByCredentials = function (email, password) {
         });
     });
 };
-
-// Hashes the password before being inserted into the database
-UserSchema.pre('save', function (next) {
-    console.log('Inside Hashing algo')
-    var user = this;
-
-    if (user.isModified('password')) {
-        bcrypt.genSalt(SALT_FACTOR, (err, salt) => {
-            bcrypt.hash(user.password, salt, (err, hash) => {
-                user.password = hash;
-                next();
-            });
-        });
-    } else {
-        next();
-    }
-});
 module.exports = {User};

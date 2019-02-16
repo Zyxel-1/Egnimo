@@ -3,6 +3,7 @@ const {constraints} = require('../validations/constraints');
 const {User} = require('../models/user');
 const _ = require('lodash');
 var validate = require("validate.js");
+const hashing = require('../utils/passwordHashing')
 //-------------------------------------------------------------------------
 // Default route
 router.get('/', (req, res) => {
@@ -20,8 +21,12 @@ router.post('/api/register', async (req, res) => {
         if(failures){
             throw new Error('Invalid Data.');
         }
+        // Hashing Password and salt generation
+        var credentials = hashing.hashPassword(body.password);
         // Store data into user model
-        var user = new User(body);
+        var user = new User({username:body.username,password:credentials.hash,salt:credentials.salt});
+        //var user = new User(body);
+        console.log(user)
         await user.save();
         // Send successful message
         res.status(200).send('Registration Successful');
