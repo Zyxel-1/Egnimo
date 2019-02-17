@@ -5,8 +5,8 @@ console.log('Connecting to database...')
 
 // Get Mongoose to use the global promise library
 mongoose.Promise = global.Promise;
-//mongoose.connect(process.env.MONGODB_URI,{ useNewUrlParser: true});
-mongoose.connect('mongodb://localhost:27017/greymessenging',{ useNewUrlParser: true});
+mongoose.connect(process.env.MONGODB_URI,{ useNewUrlParser: true});
+//mongoose.connect('mongodb://localhost:27017/greymessenging',{ useNewUrlParser: true});
 
 //Get the default connection
 var db = mongoose.connection;
