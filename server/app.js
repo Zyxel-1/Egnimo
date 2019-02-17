@@ -18,7 +18,7 @@ console.log(`Now listening on port: ${PORT}`)
 // Calls all the public routes that do not require Authentication
 app.use('/',require('./routes/public-routes'));
 // Calls all the private routes that require Authentication
-//app.use('/auth',require('./routes/auth-routes'));
+//app.use('/auth',require('./routes/auth-routes')); 
 
 module.exports.app = app;
 
