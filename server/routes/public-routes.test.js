@@ -1,16 +1,18 @@
 const expect = require('expect');
 const request = require('supertest')
 //const {ObjectID} = require('mongodb');
-
 const {app} = require('../app.js');
 const {User} = require('../models/user');
+const {users,populateUsers} = require('../database/UserSeed');
+// Wipes and repopulates test database
+beforeEach(populateUsers);
 
 // Testing registration API
 describe('POST /api/register', () => {
   it('should register user with valid username and password', (done) => {
     // Creating userdata
     var body = {
-      username: 'johndoe123',
+      username: 'createUser',
       password: 'StR0NgPaSsW0rD'
     };
     // Sending to API
@@ -65,8 +67,8 @@ describe('POST /api/register', () => {
   it('should NOT store user if username already exists in DB', (done) => {
     
     var body = {
-      username: 'johndoe123',
-      password: 'otherPassword'
+      username: users.username,
+      password: 'irrelevantPassword'
     };
 
     request(app)
