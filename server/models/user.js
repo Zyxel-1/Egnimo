@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs')
-var SALT_FACTOR = 10;
+var SALT_ROUNDS = 10;
+
 // Define schema
 var Schema = mongoose.Schema;
 
@@ -36,12 +37,25 @@ var UserSchema = new Schema({
         }
     }]
 });
+// Hashing the password and getting salt
+UserSchema.methods.setPassword = function (password) {
+    this.salt = bcrypt.genSaltSync(SALT_ROUNDS);
+    this.password = bcrypt.hashSync(password, this.salt);
+}
 
-var User = mongoose.model('User',UserSchema);
-
-
+// Validate incoming password
+UserSchema.methods.validatePassword = function(password) {
+    bcrypt.compare(password, this.hash, function(err, res) {
+        if(res){
+            return res;
+        }else{
+            console.log(err);
+            return false;
+        }
+    });
+  };
 // Finds credentials in the database
-UserSchema.statics.findByCredentials = function (email, password) {
+UserSchema.methods.findByCredentials = function (email, password) {
     var User = this;
     // Returns user that is found
     return User.findOne({email}).then((user)=>{
@@ -62,4 +76,7 @@ UserSchema.statics.findByCredentials = function (email, password) {
         });
     });
 };
+
+var User = mongoose.model('User',UserSchema);
+
 module.exports = {User};

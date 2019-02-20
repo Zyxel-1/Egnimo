@@ -35,7 +35,7 @@ describe('POST /api/register', () => {
           done();
         }).catch((e) => done(e));
       });
-  }).timeout(500);
+  }).timeout(5000);
 
   it('should NOT passwith with invalid username', (done) => {
     var body = {

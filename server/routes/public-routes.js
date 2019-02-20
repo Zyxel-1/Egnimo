@@ -21,10 +21,9 @@ router.post('/api/register', async (req, res) => {
         if(failures){
             throw new Error('Invalid Data.');
         }
-        // Hashing Password and salt generation
-        var credentials = hashing.hashPassword(body.password);
         // Store data into user model
-        var user = new User({username:body.username,password:credentials.hash,salt:credentials.salt});
+        const user = new User({username:body.username});
+        user.setPassword(body.password);
         await user.save();
         // Send successful message
         res.status(200).send('Registration Successful');
@@ -35,16 +34,14 @@ router.post('/api/register', async (req, res) => {
 //-------------------------------------------------------------------------
 // Route(/api/login)
 // Takes in a username and password and returns a json web token.
-router.post('/api/login', async (req, res) => {
+router.post('/api/login', passport.authenticate('local',{failureRedirect: '/login'}), (req, res) => {
     // Validate incoming data
     try{
         var failures = validate(body, constraints);
         if (failures) {
             res.send(failures).status(400);
         }
-        // Check Db if they exists
-    
-        // Return token
+        
         res.status(200).send('Got a Login request')
     } catch(e) {
         res.status(400).send(`An error has occured: ${e}`)
