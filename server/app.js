@@ -3,6 +3,8 @@ require('./config/config');
 
 const express = require('express');
 const{mongoose} = require('./database/mongoose')
+var passport = require('passport')
+var bodyParser = require('body-parser')
 
 //--------------------------------------------------------------------------
 //                      Express Setup
@@ -10,6 +12,8 @@ const{mongoose} = require('./database/mongoose')
 const PORT = process.env.PORT || 3000
 const app = express();
 app.use(express.json());
+app.use(passport.initialize());
+app.use(passport.session())
 app.listen(PORT);
 console.log(`Now listening on port: ${PORT}`)
 // -------------------------------------------------------------------------

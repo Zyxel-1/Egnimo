@@ -44,16 +44,10 @@ UserSchema.methods.setPassword = function (password) {
 }
 
 // Validate incoming password
-UserSchema.methods.validatePassword = function(password) {
-    bcrypt.compare(password, this.hash, function(err, res) {
-        if(res){
-            return res;
-        }else{
-            console.log(err);
-            return false;
-        }
-    });
-  };
+UserSchema.methods.verifyPassword = function(password) {
+    return bcrypt.compare(password, this.password);
+};
+
 // Finds credentials in the database
 UserSchema.methods.findByCredentials = function (email, password) {
     var User = this;

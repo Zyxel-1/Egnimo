@@ -1,5 +1,5 @@
 var env = process.env.NODE_ENV || 'development';
-/*
+//*
 if (env === 'development'||env === 'test'){
     console.log(`\n\tLocal Enviroment ========> [${env}]\n\n`)
 
@@ -12,7 +12,7 @@ if (env === 'development'||env === 'test'){
 }
 //*/
 
-//**
+/**
 // Local dev/test enviroments variables
 if (env === 'development'||env === 'test'){
     console.log(`\n\tLocal Enviroment ========> [${env}]\n\n`)

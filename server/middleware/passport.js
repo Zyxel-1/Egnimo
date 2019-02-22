@@ -1,18 +1,20 @@
+/**
 const mongoose = require('mongoose');
 const passport = require('passport');
-const LocalStrategy = require('passport-local');
+const LocalStrategy = require('passport-local').Strategy;
 
-const Users = mongoose.model('Users');
+const {User} = require('../models/user');
 
 passport.use(new LocalStrategy({
   usernameField: 'user[email]',
   passwordField: 'user[password]',
 }, (email, password, done) => {
-  Users.findOne({ email })
-    .then((user) => {
-      if(!user || !user.validatePassword(password)) {
-        return done(null, false, { errors: { 'username or password': 'is invalid' } });
-      }
-      return done(null, user);
-    }).catch(done);
+  console.log('Finding person in database')
+  User.findOne({email}), (err,user)=>{
+    if(err){return done(err);}
+    if(!user){ return done(null,false,{erros: 'User not found.'});}
+    if(!user.verifyPassword(password)) {return done(null,false,{errors: 'Password is incorrect'});}
+    return done(null,user);
+  };
 }));
+ */
