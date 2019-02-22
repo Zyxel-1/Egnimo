@@ -1,9 +1,9 @@
 const expect = require('expect');
 const request = require('supertest')
 //const {ObjectID} = require('mongodb');
-const {app} = require('../app.js');
-const {User} = require('../models/user');
-const {users,populateUsers} = require('../models/UserSeed');
+const {app} = require('../../app.js');
+const {User} = require('../../models/user');
+const {users,populateUsers} = require('../../models/UserSeed');
 // Wipes and repopulates test database
 beforeEach(populateUsers);
 
@@ -17,9 +17,9 @@ describe('POST /api/register', () => {
     };
     // Sending to API
     request(app)
-      .post('/api/register')
+      .post('/api/user/register')
       .send(body)
-      .expect(200)
+      .expect(201)
       .end((err) => {
         if (err) {
           return done(err);
@@ -44,7 +44,7 @@ describe('POST /api/register', () => {
     };
     
     request(app)
-      .post('/api/register')
+      .post('/api/user/register')
       .send(body)
       .expect(400)
       .end(done);
@@ -58,7 +58,7 @@ describe('POST /api/register', () => {
     };
     
     request(app)
-      .post('/api/register')
+      .post('/api/user/register')
       .send(body)
       .expect(400)
       .end(done);
@@ -72,14 +72,14 @@ describe('POST /api/register', () => {
     };
 
     request(app)
-      .post('/api/register')
+      .post('/api/user/register')
       .send(body)
       .expect(400)
       .end(done);
   });
 });
 
-describe('POST /api/login1',()=>{
+describe('POST /api/login',()=>{
   it('should return salt if user is found',()=>{
 
   });
@@ -92,3 +92,15 @@ describe('POST /api/login1',()=>{
 
   });
 });
+
+describe('GET /api/user/logout',()=>{
+  it('should delete the token for an authenticated user',()=>{
+
+  });
+  it('should NOT delete token from user if tokens do not match',()=>{
+
+  });
+  it('should NOT delete token if user was never authenticated',()=>{
+    
+  })
+})

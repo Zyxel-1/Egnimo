@@ -1,9 +1,18 @@
+/**
+ * /routes/public-routes.js
+ * @description:: All routes that are public without authentication
+ * 
+ */
+
 var router = require('express').Router();
-const {constraints} = require('../validations/constraints');
-const {User} = require('../models/user');
+
 var validate = require("validate.js");
+const {constraints} = require('../../validations/constraints');
+
 const passport = require('passport');
-require('../middleware/passport')
+require('../../middleware/passport')
+
+const {User} = require('../../models/user');
 
 //-------------------------------------------------------------------------
 // Default route
@@ -13,7 +22,7 @@ router.get('/', (req, res) => {
 //-------------------------------------------------------------------------
 // Route(/api/register)
 // Takes in a username and hashed password to store in the database.
-router.post('/api/register', async (req, res) => {
+router.post('/register', async (req, res) => {
     try {
         // Extract data from request
         var body = req.body
@@ -35,7 +44,7 @@ router.post('/api/register', async (req, res) => {
 //-------------------------------------------------------------------------
 // Route(POST /api/login)
 // Takes in a username and password and returns a json web token.
-router.post('/api/login',
+router.post('/login',
 (req, res,next) => {                         
     passport.authenticate('local',{session: false},(err,user,info)=>{
         if(err|| !user){
@@ -49,7 +58,7 @@ router.post('/api/login',
             if(err){res.send(err);}
             user.generateJWT().then((token)=>{
                 console.log('Your in login');
-                res.header('x-auth',token).send(user);
+                res.header('Authorization',token).send(user);
             });
         });
     })(req,res);
@@ -61,17 +70,10 @@ router.get('/login',(req,res)=>{
     res.status(400).send('Authentication went wrong.')
 })
 //-------------------------------------------------------------------------
-// Route(GET /api/login)
+// Route(GET /api/logout)
 //
-router.get('/api/logout',(req,res)=>{
+router.get('/logout',(req,res)=>{
     req.logout();
     res.send('ok')
-})
-//-------------------------------------------------------------------------
-// Route(GET /api/login)
-//
-router.get('/api/private',
-(req,res)=>{
-    res.status(200).send('You are in a private route.')
 })
 module.exports = router;

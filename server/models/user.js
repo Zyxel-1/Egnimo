@@ -67,6 +67,21 @@ UserSchema.methods.generateJWT = function (){
     })
 }
 
+UserSchema.methods.findByToken = function (token) {
+    var User = this;
+    var decoded;
+
+    try{
+        decoded = jwt.verify(token,process.env.JWT_SECRET);
+    }catch(e){
+        return Promise.reject();
+    }
+    return User.findOne({
+        _id: decoded._id,
+        'tokens.token':token,
+        'tokens.access': 'auth'
+    })
+}
 // Finds credentials in the database
 UserSchema.methods.findByCredentials = function (email, password) {
     var User = this;

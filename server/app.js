@@ -4,7 +4,6 @@ require('./config/config');
 const express = require('express');
 const{mongoose} = require('./database/mongoose')
 var passport = require('passport')
-var bodyParser = require('body-parser')
 
 //--------------------------------------------------------------------------
 //                      Express Setup
@@ -20,7 +19,8 @@ console.log(`Now listening on port: ${PORT}`)
 //                      Routes
 // -------------------------------------------------------------------------
 // Calls all the public routes that do not require Authentication
-app.use('/',require('./routes/public-routes'));
+app.use('/',require('./routes/index.js'));
+//app.use('/',require('./routes/public-routes'));
 // Calls all the private routes that require Authentication
 //app.use('/auth',require('./routes/auth-routes')); 
 
