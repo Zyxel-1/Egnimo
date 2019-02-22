@@ -3,7 +3,7 @@ const request = require('supertest')
 //const {ObjectID} = require('mongodb');
 const {app} = require('../app.js');
 const {User} = require('../models/user');
-const {users,populateUsers} = require('../database/UserSeed');
+const {users,populateUsers} = require('../models/UserSeed');
 // Wipes and repopulates test database
 beforeEach(populateUsers);
 

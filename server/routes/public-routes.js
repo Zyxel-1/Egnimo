@@ -3,31 +3,8 @@ const {constraints} = require('../validations/constraints');
 const {User} = require('../models/user');
 var validate = require("validate.js");
 const passport = require('passport');
-const _ = require('lodash');
-const LocalStrategy = require('passport-local').Strategy;
+require('../middleware/passport')
 
-passport.use(new LocalStrategy(
-    (username, password, done) => {
-        // Find User in Database
-        console.log('Inside local strategy')
-        User.findOne({username}).then((user,err)=>  {
-            if(err){
-                console.log(`An err happened: ${err}`)
-                return done(err)}
-            if(!user){
-                console.log(`No user found: ${user}`)
-                return done(null, false)}
-            // Checking if passwords match
-            user.verifyPassword(password).then((valid)=>{
-                if(!valid){
-                    console.log(`Passwords do not match ${password} and verify returned ${valid}`);
-                    return done(null,false);
-                }
-                console.log('Password and user found returning user')
-                return done(null,user,{message: 'Logged in successfully!'})
-            });
-        })
-}));
 //-------------------------------------------------------------------------
 // Default route
 router.get('/', (req, res) => {
@@ -56,10 +33,9 @@ router.post('/api/register', async (req, res) => {
     }
 });
 //-------------------------------------------------------------------------
-// Route(/api/login)
+// Route(POST /api/login)
 // Takes in a username and password and returns a json web token.
 router.post('/api/login',
-//passport.authenticate('local',{session: false},{failureRedirect: '/login'}),
 (req, res,next) => {                         
     passport.authenticate('local',{session: false},(err,user,info)=>{
         if(err|| !user){
@@ -78,15 +54,23 @@ router.post('/api/login',
         });
     })(req,res);
 });
-
+//-------------------------------------------------------------------------
+// Route(GET /api/login)
+//
 router.get('/login',(req,res)=>{
     res.status(400).send('Authentication went wrong.')
 })
-router.get('/logout',(req,res)=>{
+//-------------------------------------------------------------------------
+// Route(GET /api/login)
+//
+router.get('/api/logout',(req,res)=>{
     req.logout();
     res.send('ok')
 })
-router.get('/private',
+//-------------------------------------------------------------------------
+// Route(GET /api/login)
+//
+router.get('/api/private',
 (req,res)=>{
     res.status(200).send('You are in a private route.')
 })

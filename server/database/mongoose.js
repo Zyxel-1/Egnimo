@@ -8,8 +8,6 @@ mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGODB_URI,{ useNewUrlParser: true});
 mongoose.set('useCreateIndex', true);
 
-//mongoose.connect('mongodb://localhost:27017/greymessenging',{ useNewUrlParser: true});
-
 //Get the default connection
 var db = mongoose.connection;
 
