@@ -44,9 +44,26 @@ UserSchema.methods.setPassword = function (password) {
 }
 
 // Validate incoming password
-UserSchema.methods.verifyPassword = function(password) {
-    return bcrypt.compare(password, this.password);
+UserSchema.methods.verifyPassword = async function(password) {
+    const result = await bcrypt.compare(password, this.password);
+    if(result){
+        return true;
+    }else{
+        return false;
+    }
 };
+
+// Generate user token
+UserSchema.methods.generateJWT = function (){
+    var user = this;
+    var access = 'auth';
+    var token = jwt.sign({_id: user._id.toHexString(),access},process.env.JWT_SECRET).toString();
+
+    user.tokens = user.tokens.concat([{access,token}]);
+    return user.save().then(()=>{
+        return token;
+    })
+}
 
 // Finds credentials in the database
 UserSchema.methods.findByCredentials = function (email, password) {

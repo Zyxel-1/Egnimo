@@ -9,7 +9,8 @@ const LocalStrategy = require('passport-local').Strategy;
 passport.use(new LocalStrategy(
     (username, password, done) => {
         // Find User in Database
-        User.findOne({username}).then((user,err)=>{
+        console.log('Inside local strategy')
+        User.findOne({username}).then((user,err)=>  {
             if(err){
                 console.log(`An err happened: ${err}`)
                 return done(err)}
@@ -23,10 +24,9 @@ passport.use(new LocalStrategy(
                     return done(null,false);
                 }
                 console.log('Password and user found returning user')
-                return done(null,user)
+                return done(null,user,{message: 'Logged in successfully!'})
             });
         })
-        
 }));
 //-------------------------------------------------------------------------
 // Default route
@@ -59,23 +59,37 @@ router.post('/api/register', async (req, res) => {
 // Route(/api/login)
 // Takes in a username and password and returns a json web token.
 router.post('/api/login',
-passport.authenticate('local',{failureRedirect: '/login'}),
-(req, res) => {
-    try{
-        // Validate incoming data
-        console.log('Your in login')
-        var body = req.body;
-        var failures = validate(body, constraints);
-        if (failures) {
-            res.send(failures).status(400);
+//passport.authenticate('local',{failureRedirect: '/login'}),
+(req, res,next) => {
+    console.log('hello')                                
+    passport.authenticate('local',{session: false},(err,user,info)=>{
+        console.log(`this is the user logging in : ${user}`);
+        if(err|| !user){
+            return res.status(400).json({
+                message: 'Failed to login.',
+                user: user
+            });
         }
-        res.status(200).send('Got a Login request')
-    } catch(e) {
-        res.status(400).send(`An error has occured: ${e}`)
-    }
+        // Generating JWT for user
+        req.login(user,{session:false},(err)=>{
+            if(err){res.send(err);}
+            user.generateJWT().then((token)=>{
+                console.log('Your in login');
+                res.header('x-auth',token).send(user);
+            });
+        });
+    })
 });
 
 router.get('/login',(req,res)=>{
     res.status(400).send('Authentication went wrong.')
+})
+router.get('/logout',(req,res)=>{
+    req.logout();
+    res.send('ok')
+})
+router.get('/private',
+(req,res)=>{
+    res.status(200).send('You are in a private route.')
 })
 module.exports = router;
