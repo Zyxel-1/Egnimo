@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
 var SALT_ROUNDS = 10;
 
 // Define schema

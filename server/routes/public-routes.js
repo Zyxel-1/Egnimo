@@ -59,11 +59,9 @@ router.post('/api/register', async (req, res) => {
 // Route(/api/login)
 // Takes in a username and password and returns a json web token.
 router.post('/api/login',
-//passport.authenticate('local',{failureRedirect: '/login'}),
-(req, res,next) => {
-    console.log('hello')                                
+//passport.authenticate('local',{session: false},{failureRedirect: '/login'}),
+(req, res,next) => {                         
     passport.authenticate('local',{session: false},(err,user,info)=>{
-        console.log(`this is the user logging in : ${user}`);
         if(err|| !user){
             return res.status(400).json({
                 message: 'Failed to login.',
@@ -78,7 +76,7 @@ router.post('/api/login',
                 res.header('x-auth',token).send(user);
             });
         });
-    })
+    })(req,res);
 });
 
 router.get('/login',(req,res)=>{
