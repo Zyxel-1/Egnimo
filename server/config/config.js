@@ -1,27 +1,16 @@
+/*
+    config.js
+
+    This file reads in enviromental variables from
+    a .env file found in the root of the directory.
+
+ */
 var env = process.env.NODE_ENV || 'development';
-//*
-if (env === 'development'||env === 'test'){
-    console.log(`\n\tLocal Enviroment ========> [${env}]\n\n`)
 
-    var config = require('./config.json');
-    var envConfig = config[env];
-
-    Object.keys(envConfig).forEach((key)=>{
-        process.env[key] = envConfig[key];
-    })
+if(env === 'development'){
+    require('dotenv').config();
+    process.env.MONGODB_URI = process.env.MONGO_DB_DEV;
+}else if(env === 'test'){
+    require('dotenv').config();
+    process.env.MONGODB_URI = process.env.MONGO_DB_TEST;
 }
-//*/
-
-/**
-// Local dev/test enviroments variables
-if (env === 'development'||env === 'test'){
-    console.log(`\n\tLocal Enviroment ========> [${env}]\n\n`)
-    if(env==='development'){
-        process.env.PORT=3000;
-        process.env.MONGODB_URI = 'mongodb://localhost:27017/Greymessenging_Dev'
-    }else{
-        process.env.PORT=3000;
-        process.env.MONGODB_URI='mongodb://localhost:27017/Greymessenging_Test'
-    }
-}
-//*/
