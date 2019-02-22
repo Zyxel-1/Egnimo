@@ -4,6 +4,7 @@ require('./config/config');
 const express = require('express');
 const{mongoose} = require('./database/mongoose')
 var passport = require('passport')
+require('./middleware/passport')
 
 //--------------------------------------------------------------------------
 //                      Express Setup
@@ -18,11 +19,8 @@ console.log(`Now listening on port: ${PORT}`)
 // -------------------------------------------------------------------------
 //                      Routes
 // -------------------------------------------------------------------------
-// Calls all the public routes that do not require Authentication
+// Calls the index file for all routes for this project.
 app.use('/',require('./routes/index.js'));
-//app.use('/',require('./routes/public-routes'));
-// Calls all the private routes that require Authentication
-//app.use('/auth',require('./routes/auth-routes')); 
 
 module.exports.app = app;
 

@@ -5,7 +5,8 @@
  */
 const router = require('express').Router();
 
-router.get('/profile', async (req,res)=>{
+router.get('/profile', 
+(req,res)=>{
     res.status(200).send('This is a protected route. You have access to it.')
 });
 

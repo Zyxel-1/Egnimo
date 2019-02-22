@@ -34,21 +34,15 @@ const JWTStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 
 var opts = {};
-opts.jwtFromRequest = ExtractJwt.fromHeader('Authorization');
+opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 opts.secretOrKey = process.env.JWT_SECRET;
 
-
 passport.use(new JWTStrategy(opts,(jwtPayload, done)=>{
-    console.log(opts.jwtFromRequest)
-    console.log(`JWT Content: ${jwtPayload}`);
-    // Find the user in db if needed. This functionality may be omitted if you store everything you'll
-    // need in JWT Payload
-    User.findByToken(jwtPayload)
-    .then((user)=>{
-        if(!user){
-            return Promise.reject();
-        }
-        done(null,user)
-    })
+    console.log(`JWT Content: ${JSON.stringify(jwtPayload)}`);
+    try{
+        return done(null, jwtPayload._id)
+    }catch (e){
+        done(e)
+    }
 }))
 //*/
