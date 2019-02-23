@@ -3,7 +3,8 @@ const request = require('supertest')
 //const {ObjectID} = require('mongodb');
 const {app} = require('../../app.js');
 const {User} = require('../../models/user');
-const {users,populateUsers} = require('../../models/UserSeed');
+
+const {users,populateUsers} = require('../../models/seedData/userSeed');
 // Wipes and repopulates test database
 beforeEach(populateUsers);
 
@@ -80,11 +81,11 @@ describe('POST /api/register', () => {
 });
 
 describe('POST /api/login',()=>{
-  it('should return salt if user is found',()=>{
+  it('should return a JWT if user is registered',()=>{
 
   });
 
-  it('should NOT return salt if user is not found',()=>{
+  it('should NOT return JWT if user is not found',()=>{
 
   });
 
@@ -92,7 +93,14 @@ describe('POST /api/login',()=>{
 
   });
 });
+describe('POST /api/profile',()=>{
+  it('should let an authorized user into a protected route',()=>{
 
+  });
+  it('should NOT let an unauthorized user into a protected route',()=>{
+
+  });
+})
 describe('GET /api/user/logout',()=>{
   it('should delete the token for an authenticated user',()=>{
 

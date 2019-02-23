@@ -39,11 +39,21 @@ var UserSchema = new Schema({
         }
     }]
 });
-// Hashing the password and getting salt
-UserSchema.methods.setPassword = function (password) {
-    this.salt = bcrypt.genSaltSync(SALT_ROUNDS);
-    this.password = bcrypt.hashSync(password, this.salt);
-}
+
+UserSchema.pre('validate', function(next){
+    const user = this;
+    if(user.isModified('password')){
+        bcrypt.genSalt(SALT_ROUNDS, (err, salt)=>{
+            bcrypt.hash(this.password, salt, (err,hash)=>{
+                user.password = hash;
+                user.salt = salt;
+                next();
+            });
+        });
+    }else{
+        next();
+    }
+});
 
 // Validate incoming password
 UserSchema.methods.verifyPassword = async function(password) {
@@ -65,25 +75,17 @@ UserSchema.methods.generateJWT = function () {
     return user.save().then(()=>{
         return token;
     })
-}
+};
+UserSchema.statics.removeJWT = function (token) {
+    var jwta = token.toString().slice(7);
+    var user = this;
+    return user.updateOne({
+        $pull:{
+            tokens: {jwta}
+        }
+    });
 
-UserSchema.statics.findByToken = function (token) {
-    console.log('You are in the Find by token methods')
-    console.log(`The token is inside find: ${token}`)
-    var User = this;
-    var decoded;
-
-    try{
-        decoded = jwt.verify(token,process.env.JWT_SECRET);
-    }catch(e){
-        return Promise.reject();
-    }
-    return User.findOne({
-        _id: decoded._id,
-        'tokens.token':token,
-        'tokens.access': 'auth'
-    })
-}
+};
 
 var User = mongoose.model('User',UserSchema);
 

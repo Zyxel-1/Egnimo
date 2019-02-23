@@ -32,8 +32,8 @@ router.post('/register', async (req, res) => {
             throw new Error('Please include a valid Username or Password.');
         }
         // Store data into user model
-        const user = new User({username:body.username});
-        user.setPassword(body.password);
+        const user = new User(body);
+        //user.setPassword(body.password);
         await user.save();
         // Send successful message
         res.status(201).send('Registration Successful');
@@ -57,7 +57,6 @@ router.post('/login',
         req.login(user,{session:false},(err)=>{
             if(err){res.send(err);}
             user.generateJWT().then((token)=>{
-                console.log('Your in login');
                 res.header('Authorization',token).send(user);
             });
         });
@@ -72,8 +71,11 @@ router.get('/login',(req,res)=>{
 //-------------------------------------------------------------------------
 // Route(GET /api/logout)
 //
-router.get('/logout',(req,res)=>{
+router.get('/logout',
+passport.authenticate('jwt',{session: false}),
+(req,res)=>{
     req.logout();
-    res.send('ok')
+    User.removeJWT(req.header('Authorization'));
+    res.send('ok');
 })
 module.exports = router;
