@@ -36,7 +36,9 @@ router.post('/register', async (req, res) => {
         //user.setPassword(body.password);
         await user.save();
         // Send successful message
-        res.status(201).send('Registration Successful');
+        res.status(201).json({
+            message: 'Registration Successful.'
+        })
     } catch (e) {
         res.status(400).send(`An error has occured: ${e}`);
     }
@@ -56,17 +58,18 @@ router.post('/login',
         // Generating JWT for user
         req.login(user,{session:false},(err)=>{
             if(err){res.send(err);}
-            user.generateJWT().then((token)=>{
+            var token = user.generateJWT();
+            if(token){
                 console.log('Logged in')
                 res.header('Authorization',token).json({
                     message: 'Login Successful'
                 });
-            }).catch((e)=>{
+            }else{
                 console.log('An Error Occured')
                 res.status(500).json({
                     message: 'You are alread authenticated.'
                 })
-            });
+            }
         });
     })(req,res);
 });
@@ -83,7 +86,9 @@ router.get('/logout',
 passport.authenticate('jwt',{session: false}),
 (req,res)=>{
     //req.logout();
-    User.removeJWT(req.header('Authorization'));
-    res.send('ok');
-})
+    User.removeJWT(req.header('Authorization'))
+    res.status(200).json({
+        message: 'Successfully logged out.'
+    })
+});
 module.exports = router;

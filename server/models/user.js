@@ -68,26 +68,28 @@ UserSchema.methods.verifyPassword = async function(password) {
 // Generate user token
 UserSchema.methods.generateJWT = function () {
     var user = this;
-console.log(`Number of tokens: ${user.tokens.length}`)
+    // A user can not have more than one JWT token at a time
     if(user.tokens.length === 0){
         var access = 'auth';
         var token = jwt.sign({_id: user._id.toHexString(),access},process.env.JWT_SECRET).toString();
         user.tokens = user.tokens.concat([{access,token}]);
-        return user.save();
+        user.save();
+        return token;
     }else{
-        throw new Error();
+        return null;
     }
     
 };
 UserSchema.statics.removeJWT = function (token) {
-    var jwta = token.toString().slice(7);
-    var user = this;
-    return user.updateOne({
-        $pull:{
-            tokens: {jwta}
+    // Remove the bearer portion of the token
+
+    var token = token.toString().slice(7).trim();
+    
+    return User.updateOne({
+        $pull: {
+            tokens: token
         }
     });
-
 };
 
 var User = mongoose.model('User',UserSchema);
