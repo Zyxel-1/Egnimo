@@ -57,7 +57,15 @@ router.post('/login',
         req.login(user,{session:false},(err)=>{
             if(err){res.send(err);}
             user.generateJWT().then((token)=>{
-                res.header('Authorization',token).send(user);
+                console.log('Logged in')
+                res.header('Authorization',token).json({
+                    message: 'Login Successful'
+                });
+            }).catch((e)=>{
+                console.log('An Error Occured')
+                res.status(500).json({
+                    message: 'You are alread authenticated.'
+                })
             });
         });
     })(req,res);
@@ -74,7 +82,7 @@ router.get('/login',(req,res)=>{
 router.get('/logout',
 passport.authenticate('jwt',{session: false}),
 (req,res)=>{
-    req.logout();
+    //req.logout();
     User.removeJWT(req.header('Authorization'));
     res.send('ok');
 })
