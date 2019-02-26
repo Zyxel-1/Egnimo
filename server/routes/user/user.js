@@ -61,9 +61,7 @@ router.post('/login',
             var token = user.generateJWT();
             if(token){
                 console.log('Logged in')
-                res.header('Authorization',token).json({
-                    message: 'Login Successful'
-                });
+                res.header('Authorization',token).send(user)
             }else{
                 console.log('An Error Occured')
                 res.status(500).json({
@@ -86,9 +84,10 @@ router.get('/logout',
 passport.authenticate('jwt',{session: false}),
 (req,res)=>{
     //req.logout();
-    User.removeJWT(req.header('Authorization'))
-    res.status(200).json({
-        message: 'Successfully logged out.'
+    req.user.removeJWT(req.header('Authorization')).then(()=>{
+        res.status(200).send('its done')
+    },()=>{
+        res.status(400).send()
     })
 });
 module.exports = router;

@@ -2,7 +2,10 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-var SALT_ROUNDS = 10;
+const SALT_ROUNDS = 10;
+// JWT expiration is in minutes
+const JWT_EXPIRATION_TIME = '2m'
+
 
 // Define schema
 var Schema = mongoose.Schema;
@@ -69,27 +72,25 @@ UserSchema.methods.verifyPassword = async function(password) {
 UserSchema.methods.generateJWT = function () {
     var user = this;
     // A user can not have more than one JWT token at a time
-    if(user.tokens.length === 0){
-        var access = 'auth';
-        var token = jwt.sign({_id: user._id.toHexString(),access},process.env.JWT_SECRET).toString();
-        user.tokens = user.tokens.concat([{access,token}]);
-        user.save();
-        return token;
-    }else{
-        return null;
-    }
-    
+
+    var access = 'auth';
+    var token = jwt.sign({_id: user._id.toHexString(),access},process.env.JWT_SECRET,{expiresIn: JWT_EXPIRATION_TIME}).toString();
+    user.tokens = user.tokens.concat([{access,token}]);
+    user.save();
+    return token;
 };
-UserSchema.statics.removeJWT = function (token) {
+const {ObjectId} = require('mongodb')
+UserSchema.methods.removeJWT = function (token) {
     // Remove the bearer portion of the token
 
     var token = token.toString().slice(7).trim();
-    
-    return User.updateOne({
+    var user = this;
+    console.log(user)
+    return user.updateOne({
         $pull: {
-            tokens: token
+            tokens: {token}
         }
-    });
+    })
 };
 
 var User = mongoose.model('User',UserSchema);
