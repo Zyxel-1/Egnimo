@@ -10,6 +10,7 @@ In order to get the project running you need the following:
 
 * **MongoDB**
   * Install and setup v4.0.6
+  more to come
 * **Node.js**
   * Developed using v11.2.0
 * **Environmental Variables**
