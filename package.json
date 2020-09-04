@@ -30,7 +30,7 @@
     "express": "^4.16.4",
     "jsonwebtoken": "^8.4.0",
     "moment": "^2.23.0",
-    "mongodb": "^2.2.36",
+    "mongodb": "^3.1.13",
     "mongoose": "^5.4.12",
     "node-rsa": "^1.0.3",
     "passport": "^0.4.0",
